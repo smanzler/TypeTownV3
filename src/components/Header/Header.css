@@ -1,0 +1,13 @@
+.header-container {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translate(-50%, 0);
+
+  width: clamp(20px, 90%, 800px);
+
+  background-color: black;
+
+  padding: 10px;
+  border-radius: 20px;
+}
