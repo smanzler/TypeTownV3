@@ -56,10 +56,10 @@ const Textbox = () => {
 
           switch (userInput[index]) {
             case undefined:
-              style = { color: "white" };
+              style = { color: "grey" };
               break;
             case char:
-              style = { color: "green" };
+              style = { color: "white" };
               break;
             default:
               style = { color: "red" };
