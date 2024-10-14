@@ -1,3 +1,26 @@
 div {
   text-align: center;
 }
+
+.text-container {
+  display: inline-block;
+  position: relative;
+  font-family: monospace;
+  white-space: pre;
+}
+
+.cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.2em;
+  background-color: black;
+  margin-left: 2px;
+  animation: blink 1s step-start infinite;
+}
+
+/* Cursor blinking animation */
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}

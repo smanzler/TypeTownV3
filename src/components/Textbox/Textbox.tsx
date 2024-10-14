@@ -4,20 +4,83 @@ import quotesData from "../../data/quotes.json";
 
 const Textbox = () => {
   const [words, setWords] = useState("");
+  const [userInput, setUserInput] = useState("");
 
-  const getQuote = () => {
+  const getRandomQuote = () => {
     const quotes = quotesData.quotes;
     const randomIndex = Math.floor(Math.random() * quotes.length);
     return quotes[randomIndex].quote;
   };
 
+  const handleKeyPress = (event: KeyboardEvent) => {
+    const { key, ctrlKey } = event;
+
+    if (ctrlKey && key === "Backspace") {
+      setUserInput((prev) => {
+        const trimmed = prev.trimEnd();
+        const updated = trimmed.split(" ").slice(0, -1).join(" ");
+        return updated.length > 0 ? updated + " " : updated;
+      });
+    } else if (key.length === 1) {
+      setUserInput((prev) => prev + key);
+    } else if (key === "Backspace") {
+      setUserInput((prev) => prev.slice(0, -1));
+    } else if (key === "Enter") {
+      console.log(key);
+    }
+  };
+
   useEffect(() => {
-    setWords(getQuote());
+    setWords(getRandomQuote());
+    setUserInput("");
+
+    window.addEventListener("keydown", handleKeyPress);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
   }, []);
+
+  useEffect(() => {
+    console.log(userInput);
+  }, [userInput]);
+
   return (
     <div>
-      <p>{words}</p>
-      <button onClick={() => setWords(getQuote())}>Change Quote</button>
+      <div>
+        {words.split("").map((char, index) => {
+          let style: React.CSSProperties | undefined = undefined;
+
+          switch (userInput[index]) {
+            case undefined:
+              style = { color: "white" };
+              break;
+            case char:
+              style = { color: "green" };
+              break;
+            default:
+              style = { color: "red" };
+              break;
+          }
+
+          return (
+            <span key={index} style={style}>
+              {char}
+            </span>
+          );
+        })}
+
+        <span className="cursor" />
+      </div>
+      <button
+        onClick={() => {
+          setWords(getRandomQuote());
+          setUserInput("");
+        }}
+      >
+        Change Quote
+      </button>
+      <button onClick={() => setUserInput("")}>Clear</button>
     </div>
   );
 };
