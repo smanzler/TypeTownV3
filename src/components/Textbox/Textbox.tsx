@@ -15,7 +15,10 @@ const Textbox = () => {
   const handleKeyPress = (event: KeyboardEvent) => {
     const { key, ctrlKey } = event;
 
-    if (ctrlKey && key === "Backspace") {
+    if (key === " " || key === "Spacebar") {
+      event.preventDefault();
+      setUserInput((prev) => prev + " ");
+    } else if (ctrlKey && key === "Backspace") {
       setUserInput((prev) => {
         const trimmed = prev.trimEnd();
         const updated = trimmed.split(" ").slice(0, -1).join(" ");
@@ -46,8 +49,8 @@ const Textbox = () => {
   }, [userInput]);
 
   return (
-    <div>
-      <div>
+    <div className="container">
+      <div className="text-container">
         {words.split("").map((char, index) => {
           let style: React.CSSProperties | undefined = undefined;
 
@@ -72,15 +75,17 @@ const Textbox = () => {
 
         <span className="cursor" />
       </div>
-      <button
-        onClick={() => {
-          setWords(getRandomQuote());
-          setUserInput("");
-        }}
-      >
-        Change Quote
-      </button>
-      <button onClick={() => setUserInput("")}>Clear</button>
+      <div className="button-container">
+        <button
+          onClick={() => {
+            setWords(getRandomQuote());
+            setUserInput("");
+          }}
+        >
+          Change Quote
+        </button>
+        <button onClick={() => setUserInput("")}>Clear</button>
+      </div>
     </div>
   );
 };
