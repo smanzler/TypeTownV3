@@ -24,17 +24,12 @@
 }
 
 .cursor {
-  display: inline-block;
-  width: 2px;
-  height: 1.2em;
-  background-color: black;
-  margin-left: 2px;
-  animation: blink 1s step-start infinite;
-}
+  position: absolute;
+  top: 0px;
+  left: 0px;
 
-/* Cursor blinking animation */
-@keyframes blink {
-  50% {
-    opacity: 0;
-  }
+  width: 2px;
+  height: 1em;
+  background-color: #2f90e6;
+  transition-duration: 0.1s;
 }

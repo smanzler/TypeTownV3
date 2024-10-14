@@ -1,10 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./Textbox.css";
 import quotesData from "../../data/quotes.json";
 
 const Textbox = () => {
   const [words, setWords] = useState("");
   const [userInput, setUserInput] = useState("");
+
+  const cursorRef = useRef<HTMLSpanElement | null>(null);
+  const textRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const textContainerRef = useRef<HTMLDivElement | null>(null);
 
   const getRandomQuote = () => {
     const quotes = quotesData.quotes;
@@ -28,8 +32,6 @@ const Textbox = () => {
       setUserInput((prev) => prev + key);
     } else if (key === "Backspace") {
       setUserInput((prev) => prev.slice(0, -1));
-    } else if (key === "Enter") {
-      console.log(key);
     }
   };
 
@@ -45,12 +47,42 @@ const Textbox = () => {
   }, []);
 
   useEffect(() => {
-    console.log(userInput);
+    const currentIndex = userInput.length;
+
+    if (!cursorRef.current || !textContainerRef.current) return;
+
+    const containerRect = textContainerRef.current.getBoundingClientRect();
+
+    const updateCursorPosition = (left: number, top: number) => {
+      if (cursorRef.current) {
+        cursorRef.current.style.left = `${left - 1}px`;
+        cursorRef.current.style.top = `${top + 4}px`;
+      }
+    };
+
+    const targetSpan =
+      textRefs.current[currentIndex] || textRefs.current[currentIndex - 1];
+
+    if (targetSpan) {
+      const rect = targetSpan.getBoundingClientRect();
+
+      const cursorLeft = rect.left - containerRect.left;
+      const cursorTop = rect.top - containerRect.top;
+
+      if (
+        currentIndex > 0 &&
+        targetSpan === textRefs.current[currentIndex - 1]
+      ) {
+        updateCursorPosition(cursorLeft + rect.width, cursorTop);
+      } else {
+        updateCursorPosition(cursorLeft, cursorTop);
+      }
+    }
   }, [userInput]);
 
   return (
     <div className="container">
-      <div className="text-container">
+      <div className="text-container" ref={textContainerRef}>
         {words.split("").map((char, index) => {
           let style: React.CSSProperties | undefined = undefined;
 
@@ -67,13 +99,17 @@ const Textbox = () => {
           }
 
           return (
-            <span key={index} style={style}>
+            <span
+              key={index}
+              style={style}
+              ref={(el) => (textRefs.current[index] = el)}
+            >
               {char}
             </span>
           );
         })}
 
-        <span className="cursor" />
+        <span ref={cursorRef} className="cursor" />
       </div>
       <div className="button-container">
         <button
