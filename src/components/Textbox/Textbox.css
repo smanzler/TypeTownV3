@@ -15,6 +15,7 @@
 .text-container {
   position: relative;
   font-size: x-large;
+  letter-spacing: 1.5px;
 }
 
 .button-container {

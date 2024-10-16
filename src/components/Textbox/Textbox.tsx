@@ -39,7 +39,7 @@ const Textbox = () => {
 
   const addKey = (key: string) => {
     setUserInput((prev) => {
-      if (!isTyping) {
+      if (!isTyping && userInput.length === 0) {
         setIsTyping(true);
       }
       return prev + key;
@@ -79,7 +79,7 @@ const Textbox = () => {
   }, []);
 
   useEffect(() => {
-    if (isTyping) {
+    if (isTyping && !finished) {
       timerRef.current = setInterval(() => {
         setTimer((prev) => prev + 1);
       }, 1000);
@@ -91,7 +91,6 @@ const Textbox = () => {
   }, [isTyping]);
 
   const stopTimer = () => {
-    console.log("stop");
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
