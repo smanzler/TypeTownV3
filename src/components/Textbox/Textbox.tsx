@@ -12,10 +12,16 @@ const Textbox = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [finished, setFinished] = useState(false);
 
+  const [charCount, setCharCount] = useState<number[]>([]);
+
   const cursorRef = useRef<HTMLSpanElement | null>(null);
   const textRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const textContainerRef = useRef<HTMLDivElement | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const userInputRef = useRef<string>("");
+
+  const prevCharCount = useRef<number>(0);
 
   const getRandomQuote = () => {
     const quotes = quotesData.quotes;
@@ -24,12 +30,7 @@ const Textbox = () => {
   };
 
   const addKey = (key: string) => {
-    setUserInput((prev) => {
-      if (!isTyping && userInput.length === 0) {
-        setIsTyping(true);
-      }
-      return prev + key;
-    });
+    setUserInput((prev) => prev + key);
   };
 
   const handleKeyPress = (event: KeyboardEvent) => {
@@ -67,7 +68,8 @@ const Textbox = () => {
   useEffect(() => {
     if (isTyping && !finished) {
       timerRef.current = setInterval(() => {
-        setTimer((prev) => prev + 1);
+        setTimer((prevTimer) => prevTimer + 1);
+        setCharCount((prev) => [...prev, userInputRef.current.length]);
       }, 1000);
     }
 
@@ -75,6 +77,10 @@ const Textbox = () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, [isTyping]);
+
+  useEffect(() => {
+    console.log(charCount);
+  }, [charCount]);
 
   const stopTimer = () => {
     if (timerRef.current) {
@@ -86,6 +92,12 @@ const Textbox = () => {
 
   useEffect(() => {
     const currentIndex = userInput.length;
+
+    userInputRef.current = userInput;
+
+    if (!isTyping && userInput.length !== 0 && !finished) {
+      setIsTyping(true);
+    }
 
     if (userInput.length === words.length && words.length !== 0) {
       setFinished(true);
@@ -130,13 +142,16 @@ const Textbox = () => {
     setTimer(0);
     setIsTyping(false);
     setFinished(false);
+    setCharCount([]);
+    userInputRef.current = "";
+    prevCharCount.current = 0;
     if (timerRef.current) clearInterval(timerRef.current);
   };
 
   return (
     <div className="container">
       {finished ? (
-        <Results timer={timer} onPlayAgain={resetGame} />
+        <Results timer={timer} charCount={charCount} onPlayAgain={resetGame} />
       ) : (
         <>
           <div className="text-container" ref={textContainerRef}>
@@ -166,7 +181,11 @@ const Textbox = () => {
               );
             })}
 
-            <span ref={cursorRef} className="cursor" />
+            <span
+              ref={cursorRef}
+              className="cursor"
+              id={isTyping ? "none" : "blinking"}
+            />
           </div>
           <div className="button-container">
             <button
@@ -179,9 +198,9 @@ const Textbox = () => {
             >
               Change Quote
             </button>
-            <button onClick={() => setUserInput("")}>Clear</button>
+            <button onClick={resetGame}>Clear</button>
           </div>
-          <div>Time Elapsed: {timer} seconds</div>
+          <div>Time Elapsed: {timer.toFixed(1)} seconds</div>
         </>
       )}
     </div>
