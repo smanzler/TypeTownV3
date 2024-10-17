@@ -1,4 +1,5 @@
 import { LineChart } from "@mui/x-charts";
+import { axisClasses } from "@mui/x-charts/ChartsAxis";
 import { useEffect, useState } from "react";
 
 const Results = ({
@@ -23,14 +24,40 @@ const Results = ({
   return (
     <div className="results-container">
       <LineChart
-        xAxis={[{ data: wpm.map((_, index) => index) }]}
+        sx={{
+          [`.${axisClasses.root}`]: {
+            [`.${axisClasses.tick}, .${axisClasses.line}`]: {
+              stroke: "#686c70",
+              strokeWidth: 3,
+            },
+            [`.${axisClasses.tickLabel}`]: {
+              fill: "#686c70",
+              fontWeight: 800,
+            },
+          },
+        }}
+        xAxis={[
+          {
+            data: wpm.map((_, index) => index),
+          },
+        ]}
         yAxis={[{ min: 0 }]}
         series={[
           {
             curve: "natural",
+            label: "WPM",
             data: wpm,
+            color: "#2f90e6",
           },
         ]}
+        slotProps={{
+          legend: {
+            labelStyle: {
+              fontSize: 14,
+              fill: "white",
+            },
+          },
+        }}
         width={600}
         height={400}
       />
