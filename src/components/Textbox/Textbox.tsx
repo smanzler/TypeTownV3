@@ -4,6 +4,8 @@ import "./Textbox.css";
 import quotesData from "../../data/quotes.json";
 import Results from "../Results/Results";
 
+import { TbRefresh } from "react-icons/tb";
+
 const Textbox = () => {
   const [words, setWords] = useState("");
   const [userInput, setUserInput] = useState("");
@@ -185,19 +187,9 @@ const Textbox = () => {
               id={isTyping ? "none" : "blinking"}
             />
           </div>
-          <div className="button-container">
-            <button
-              onClick={() => {
-                setWords(getRandomQuote());
-                setUserInput("");
-                setTimer(0);
-                setIsTyping(false);
-              }}
-            >
-              Change Quote
-            </button>
-            <button onClick={resetGame}>Clear</button>
-          </div>
+          <button onClick={resetGame}>
+            <TbRefresh size={24} />
+          </button>
         </>
       )}
     </div>
