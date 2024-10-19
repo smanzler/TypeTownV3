@@ -6,7 +6,7 @@
 
   width: clamp(20px, 90%, 800px);
 
-  background-color: black;
+  background-color: #1a1a1a;
 
   padding: 10px;
   border-radius: 20px;
