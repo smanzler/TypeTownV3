@@ -2,6 +2,8 @@ import { LineChart } from "@mui/x-charts";
 import { axisClasses } from "@mui/x-charts/ChartsAxis";
 import { useEffect, useState } from "react";
 
+import "./Results.css";
+
 const Results = ({
   timer,
   charCount,

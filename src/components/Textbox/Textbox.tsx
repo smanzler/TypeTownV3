@@ -69,7 +69,10 @@ const Textbox = () => {
     if (isTyping && !finished) {
       timerRef.current = setInterval(() => {
         setTimer((prevTimer) => prevTimer + 1);
-        setCharCount((prev) => [...prev, userInputRef.current.length]);
+        setCharCount((prev) => [
+          ...prev,
+          Math.floor(userInputRef.current.length),
+        ]);
       }, 1000);
     }
 
@@ -77,10 +80,6 @@ const Textbox = () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, [isTyping]);
-
-  useEffect(() => {
-    console.log(charCount);
-  }, [charCount]);
 
   const stopTimer = () => {
     if (timerRef.current) {
@@ -176,7 +175,9 @@ const Textbox = () => {
                   style={style}
                   ref={(el) => (textRefs.current[index] = el)}
                 >
-                  {char}
+                  {char === " " && userInput[index] !== undefined
+                    ? userInput[index]
+                    : char}
                 </span>
               );
             })}
@@ -200,7 +201,6 @@ const Textbox = () => {
             </button>
             <button onClick={resetGame}>Clear</button>
           </div>
-          <div>Time Elapsed: {timer.toFixed(1)} seconds</div>
         </>
       )}
     </div>
