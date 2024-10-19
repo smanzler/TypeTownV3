@@ -18,7 +18,7 @@ const Results = ({
   useEffect(() => {
     setWpm(
       charCount.map((value, index) => {
-        return (value * 12) / (index + 1);
+        return Math.round((value * 12) / (index + 1));
       })
     );
   }, [charCount]);

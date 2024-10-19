@@ -69,10 +69,7 @@ const Textbox = () => {
     if (isTyping && !finished) {
       timerRef.current = setInterval(() => {
         setTimer((prevTimer) => prevTimer + 1);
-        setCharCount((prev) => [
-          ...prev,
-          Math.floor(userInputRef.current.length),
-        ]);
+        setCharCount((prev) => [...prev, userInputRef.current.length]);
       }, 1000);
     }
 
