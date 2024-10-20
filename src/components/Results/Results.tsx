@@ -1,8 +1,7 @@
-import { LineChart } from "@mui/x-charts";
-import { axisClasses } from "@mui/x-charts/ChartsAxis";
 import { useEffect, useState } from "react";
 
 import "./Results.css";
+import LineChart from "../LineChart/LineChart";
 
 const Results = ({
   timer,
@@ -25,44 +24,7 @@ const Results = ({
 
   return (
     <div className="results-container">
-      <LineChart
-        sx={{
-          [`.${axisClasses.root}`]: {
-            [`.${axisClasses.tick}, .${axisClasses.line}`]: {
-              stroke: "#686c70",
-              strokeWidth: 3,
-            },
-            [`.${axisClasses.tickLabel}`]: {
-              fill: "#686c70",
-              fontWeight: 800,
-            },
-          },
-        }}
-        xAxis={[
-          {
-            data: wpm.map((_, index) => index),
-          },
-        ]}
-        yAxis={[{ min: 0 }]}
-        series={[
-          {
-            curve: "natural",
-            label: "WPM",
-            data: wpm,
-            color: "#2f90e6",
-          },
-        ]}
-        slotProps={{
-          legend: {
-            labelStyle: {
-              fontSize: 14,
-              fill: "white",
-            },
-          },
-        }}
-        width={600}
-        height={400}
-      />
+      <LineChart wpm={wpm} />
       <p>Time taken: {timer} seconds</p>
       <button onClick={onPlayAgain}>Play Again</button>
     </div>
