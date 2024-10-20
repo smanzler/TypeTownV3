@@ -13,6 +13,7 @@ const Textbox = () => {
   const [timer, setTimer] = useState(0);
   const [isTyping, setIsTyping] = useState(false);
   const [finished, setFinished] = useState(false);
+  const [errors, setErrors] = useState(0);
 
   const [charCount, setCharCount] = useState<number[]>([]);
 
@@ -22,6 +23,7 @@ const Textbox = () => {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const userInputRef = useRef<string>("");
+  const wordsRef = useRef<string>("");
 
   const prevCharCount = useRef<number>(0);
 
@@ -31,7 +33,14 @@ const Textbox = () => {
     return quotes[randomIndex].quote;
   };
 
+  const checkError = (key: string, expected: string) => {
+    if (key !== expected) {
+      setErrors((prev) => prev + 1);
+    }
+  };
+
   const addKey = (key: string) => {
+    checkError(key, wordsRef.current[userInputRef.current.length]);
     setUserInput((prev) => prev + key);
   };
 
@@ -66,6 +75,10 @@ const Textbox = () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
   }, []);
+
+  useEffect(() => {
+    wordsRef.current = words;
+  }, [words]);
 
   useEffect(() => {
     if (isTyping && !finished) {
@@ -138,6 +151,7 @@ const Textbox = () => {
     setWords(getRandomQuote());
     setUserInput("");
     setTimer(0);
+    setErrors(0);
     setIsTyping(false);
     setFinished(false);
     setCharCount([]);
@@ -145,6 +159,10 @@ const Textbox = () => {
     prevCharCount.current = 0;
     if (timerRef.current) clearInterval(timerRef.current);
   };
+
+  useEffect(() => {
+    console.log(errors);
+  }, [errors]);
 
   return (
     <div className="container">
