@@ -10,7 +10,6 @@ const Textbox = () => {
   const [words, setWords] = useState("");
   const [userInput, setUserInput] = useState("");
 
-  const [timer, setTimer] = useState(0);
   const [isTyping, setIsTyping] = useState(false);
   const [finished, setFinished] = useState(false);
   const [errors, setErrors] = useState(0);
@@ -83,7 +82,6 @@ const Textbox = () => {
   useEffect(() => {
     if (isTyping && !finished) {
       timerRef.current = setInterval(() => {
-        setTimer((prevTimer) => prevTimer + 1);
         setCharCount((prev) => [...prev, userInputRef.current.length]);
       }, 1000);
     }
@@ -150,7 +148,6 @@ const Textbox = () => {
   const resetGame = () => {
     setWords(getRandomQuote());
     setUserInput("");
-    setTimer(0);
     setErrors(0);
     setIsTyping(false);
     setFinished(false);
@@ -167,7 +164,11 @@ const Textbox = () => {
   return (
     <div className="container">
       {finished ? (
-        <Results timer={timer} charCount={charCount} onPlayAgain={resetGame} />
+        <Results
+          errors={errors}
+          charCount={charCount}
+          onPlayAgain={resetGame}
+        />
       ) : (
         <>
           <div className="text-container" ref={textContainerRef}>

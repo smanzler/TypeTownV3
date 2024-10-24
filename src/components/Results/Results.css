@@ -3,3 +3,25 @@
   flex-direction: column;
   align-items: center;
 }
+
+.chart-container {
+  display: flex;
+  gap: 20px;
+}
+
+.stats-container {
+  display: flex;
+  flex-direction: column;
+  white-space: nowrap;
+}
+
+h1 {
+  margin: 0;
+  font-weight: 400;
+  color: steelblue;
+}
+
+p {
+  margin: 0 0 -8px 0;
+  color: gray;
+}

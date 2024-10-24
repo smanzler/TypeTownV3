@@ -6,15 +6,16 @@ interface Props {
 }
 
 const LineChart = ({ wpm }: Props) => {
-  const ref = useRef<SVGSVGElement | null>(null);
+  const svgRef = useRef<SVGSVGElement | null>(null);
+
+  const width = 900;
+  const height = 250;
 
   useEffect(() => {
-    if (ref.current) {
-      const svg = d3.select(ref.current);
+    if (svgRef.current) {
+      const svg = d3.select(svgRef.current);
       svg.selectAll("*").remove();
 
-      const width = 500;
-      const height = 300;
       const margin = { top: 20, right: 30, bottom: 30, left: 40 };
 
       const xScale = d3
@@ -33,6 +34,49 @@ const LineChart = ({ wpm }: Props) => {
         .y((d) => yScale(d))
         .curve(d3.curveMonotoneX);
 
+      const xAxisGrid = d3
+        .axisBottom(xScale)
+        .ticks(wpm.length)
+        .tickSize(-height + margin.top + margin.bottom)
+        .tickFormat(() => "");
+
+      const yAxisGrid = d3
+        .axisLeft(yScale)
+        .ticks(5)
+        .tickSize(-width + margin.left + margin.right)
+        .tickFormat(() => "");
+
+      svg
+        .append("g")
+        .attr("class", "x grid")
+        .attr("transform", `translate(0,${height - margin.bottom})`)
+        .call(xAxisGrid)
+        .selectAll(".tick:last-of-type line")
+        .remove();
+
+      svg
+        .append("g")
+        .attr("class", "y grid")
+        .attr("transform", `translate(${margin.left},0)`)
+        .call(yAxisGrid);
+
+      const xAxis = d3.axisBottom(xScale).ticks(wpm.length);
+      const yAxis = d3.axisLeft(yScale).ticks(5);
+
+      svg
+        .append("g")
+        .attr("transform", `translate(0,${height - margin.bottom})`)
+        .call(xAxis)
+        .selectAll("path")
+        .attr("stroke", "gray");
+
+      svg
+        .append("g")
+        .attr("transform", `translate(${margin.left},0)`)
+        .call(yAxis)
+        .selectAll("path")
+        .attr("stroke", "gray");
+
       svg
         .append("path")
         .datum(wpm)
@@ -50,22 +94,12 @@ const LineChart = ({ wpm }: Props) => {
         .append("circle")
         .attr("cx", (_, i) => xScale(i))
         .attr("cy", (d) => yScale(d))
-        .attr("r", 4)
+        .attr("r", 3)
         .attr("fill", "steelblue");
-
-      svg
-        .append("g")
-        .attr("transform", `translate(0,${height - margin.bottom})`)
-        .call(d3.axisBottom(xScale).ticks(wpm.length));
-
-      svg
-        .append("g")
-        .attr("transform", `translate(${margin.left},0)`)
-        .call(d3.axisLeft(yScale));
     }
   }, [wpm]);
 
-  return <svg ref={ref} width={500} height={300} />;
+  return <svg ref={svgRef} width={width} height={height} />;
 };
 
 export default LineChart;
