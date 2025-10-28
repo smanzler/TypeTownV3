@@ -4,7 +4,7 @@ import "./Textbox.css";
 import quotesData from "../../data/quotes.json";
 import Results from "../Results/Results";
 
-import { TbRefresh } from "react-icons/tb";
+import { RefreshCcw } from "lucide-react";
 
 const Textbox = () => {
   const [words, setWords] = useState("");
@@ -191,7 +191,10 @@ const Textbox = () => {
                 <span
                   key={index}
                   style={style}
-                  ref={(el) => (textRefs.current[index] = el)}
+                  ref={(el) => {
+                    textRefs.current[index] = el;
+                    return el;
+                  }}
                 >
                   {char === " " && userInput[index] !== undefined
                     ? userInput[index]
@@ -207,7 +210,7 @@ const Textbox = () => {
             />
           </div>
           <button onClick={resetGame}>
-            <TbRefresh size={24} />
+            <RefreshCcw size={24} />
           </button>
         </>
       )}
