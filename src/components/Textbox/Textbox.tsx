@@ -193,7 +193,6 @@ const Textbox = () => {
                   style={style}
                   ref={(el) => {
                     textRefs.current[index] = el;
-                    return el;
                   }}
                 >
                   {char === " " && userInput[index] !== undefined
